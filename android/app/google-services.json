@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "266264047330",
+    "firebase_url": "https://easybezy-dashbord-default-rtdb.firebaseio.com",
+    "project_id": "easybezy-dashbord",
+    "storage_bucket": "easybezy-dashbord.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266264047330:android:35071e458bba746faff8bb",
+        "android_client_info": {
+          "package_name": "com.eazypeasy.qrpeasy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266264047330-ltjhofnherm6g0bgiumvqhhe4dsd3mt4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYTOZmr77RXH7Hf6jg8qOOn-ql6npbAUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266264047330-ltjhofnherm6g0bgiumvqhhe4dsd3mt4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "266264047330-6q6bvf4837m5i4p7nb0s24e7eld3rdmd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.qrDashboard.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266264047330:android:8b2a77a9a953f1c3aff8bb",
+        "android_client_info": {
+          "package_name": "com.example.qr_dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266264047330-ltjhofnherm6g0bgiumvqhhe4dsd3mt4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYTOZmr77RXH7Hf6jg8qOOn-ql6npbAUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266264047330-ltjhofnherm6g0bgiumvqhhe4dsd3mt4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "266264047330-6q6bvf4837m5i4p7nb0s24e7eld3rdmd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.qrDashboard.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
