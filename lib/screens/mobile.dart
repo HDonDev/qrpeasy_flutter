@@ -1,10 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_solidart/flutter_solidart.dart';
 import 'package:qrpeasy_flutter/core/env/env.dart';
 import 'package:qrpeasy_flutter/widgets/mobile_error.dart';
 import 'package:qrpeasy_flutter/widgets/mobile_loading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class MobileView extends StatefulWidget {
   const MobileView({super.key});
@@ -21,11 +24,41 @@ class _MobileViewState extends State<MobileView> {
   final _isPageNotAvailable = Signal<bool>(false);
   late Resource<String> titleResourse;
 
+  // TODO: This needs refactoring & error handling.
+  Future<void> _postFCMToken(String url) async {
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final bool? didPostToken = sharedPreferences.getBool('post-fcm-token');
+    if (url != "https://qrpeasy.com/login" && didPostToken != true) {
+      try {
+        final String? fcmToken = await FirebaseMessaging.instance.getToken();
+        if (fcmToken == null) {
+          throw "Token was not found";
+        }
+
+        final uri = Uri.https('qrpeasy.com', '/api/fcm-token', {'fcm_token': fcmToken});
+        final response = await http.post(
+          uri,
+          headers: {"Content-Type": "application/json"},
+        );
+
+        if (response.statusCode != 200) {
+          print("[Debug] Request: ${response.request}");
+          throw Exception("Status code error - Status code: ${response.statusCode}");
+        }
+
+        await sharedPreferences.setBool("post-fcm-token", true);
+        print("[Debug] Token is sent");
+      } catch (e) {
+        print("[Debug] Error: $e");
+        rethrow;
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    titleResourse =
-        Resource<String>(fetcher: _getPageTitle, source: _currentPageTitle);
+    titleResourse = Resource<String>(fetcher: _getPageTitle, source: _currentPageTitle);
 
     _webViewController
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -36,7 +69,9 @@ class _MobileViewState extends State<MobileView> {
             titleResourse.set(const ResourceReady("يرجى الإنتظار..."));
             _loadingProgress.set(progress / 100);
           },
-          onPageStarted: (String url) {},
+          onPageStarted: (String url) async {
+            await _postFCMToken(url);
+          },
           onPageFinished: (String url) => titleResourse.refresh(),
           onHttpError: (HttpResponseError error) {
             if (kDebugMode) {
@@ -106,14 +141,11 @@ class _MobileViewState extends State<MobileView> {
           signal: _loadingProgress,
           child: WebViewWidget(controller: _webViewController),
           builder: (context, value, child) {
-            (bool isFinishedLoading, bool isPageNotAvailable) state =
-                (value > 0.7, _isPageNotAvailable.value);
+            (bool isFinishedLoading, bool isPageNotAvailable) state = (value > 0.7, _isPageNotAvailable.value);
             return switch (state) {
               (true, false) => child ?? const SizedBox.shrink(),
-              (false, true) =>
-                MobileError(onRefreshButtonPressed: _refreshButton),
-              (true, true) =>
-                MobileError(onRefreshButtonPressed: _refreshButton),
+              (false, true) => MobileError(onRefreshButtonPressed: _refreshButton),
+              (true, true) => MobileError(onRefreshButtonPressed: _refreshButton),
               (_, _) => const MobileLoading(),
             };
           },
