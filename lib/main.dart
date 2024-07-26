@@ -56,13 +56,7 @@ Future<void> _showNotification(int id, String? title, String? body) async {
 }
 
 Future<void> showFlutterNotification(RemoteMessage message) async {
-  if (message.notification != null) {
-    _showNotification(
-      message.notification.hashCode,
-      message.notification!.title,
-      message.notification!.body,
-    );
-  } else if (message.data.isNotEmpty) {
+   if (message.data.isNotEmpty) {
     _showNotification(
       message.data.hashCode,
       message.data['title'],
